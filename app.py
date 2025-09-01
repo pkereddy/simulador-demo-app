@@ -4,7 +4,7 @@ import random
 import time
 
 # --- CONFIGURACIÓN PRINCIPAL ---
-# Pega aquí el ID de tu hoja de cálculo DEMO
+# Pega aquí el ID de tu hoja de cálculo DEMO (la que hiciste pública)
 SPREADSHEET_ID = "11NEFkg-uUe1zTWKse1yC0jEUZB5gd8QZP0gBS9Rj-Kw" 
 WORKSHEET_NAME = "BANCO DE PREGUNTAS"
 
@@ -12,15 +12,12 @@ WORKSHEET_NAME = "BANCO DE PREGUNTAS"
 st.set_page_config(page_title="Simulador DEMO", layout="wide")
 st.title("🚀 Simulador de Examen de Abogados (DEMO)")
 
-# --- FUNCIÓN DE CARGA DE DATOS (MÉTODO PÚBLICO) ---
+# --- FUNCIÓN DE CARGA DE DATOS (MÉTODO PÚBLICO A TRAVÉS DE CSV) ---
 @st.cache_data(ttl=300)
 def load_public_data():
     try:
-        # Construir la URL pública para exportar como CSV
-        # El nombre de la hoja se debe codificar para la URL (manejar espacios, etc.)
         worksheet_name_encoded = pd.io.common.urlencode({'sheet': WORKSHEET_NAME})
         csv_url = f'https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/gviz/tq?tqx=out:csv&{worksheet_name_encoded}'
-        
         df = pd.read_csv(csv_url)
         df.fillna('', inplace=True)
         return df
@@ -34,10 +31,7 @@ df = load_data()
 if df is None:
     st.stop()
 
-# --- El resto del código de la aplicación (la lógica del simulador) se queda exactamente igual que en la v2.5 ---
-# Pega aquí el resto del código de la versión funcional anterior. 
-# Para evitar errores, te lo pongo completo de nuevo.
-
+# (El resto del código es idéntico a nuestra versión funcional v2.5)
 # --- INICIALIZACIÓN DE ESTADO ---
 if 'page' not in st.session_state:
     st.session_state.page = 'config'
@@ -53,12 +47,8 @@ if st.session_state.page == 'config':
     header_list = df.columns.tolist()
     AREA_COL_NAME = header_list[1]
     TIPO_COL_NAME = header_list[3]
-    
     areas = ["Todas"] + sorted(df[AREA_COL_NAME].astype(str).unique().tolist())
     tipos = ["Todos"] + sorted(df[TIPO_COL_NAME].astype(str).unique().tolist())
-
-    area_filter = st.sidebar.selectbox("Filtrar por Área:", options=areas, key="area_filter")
-    tipo_filter = st.sidebar.selectbox("Filtrar por Tipo de Pregunta:", options=tipos, key="tipo_filter")
     num_questions = st.sidebar.slider("Número de preguntas:", 1, len(df), 10, key="num_questions")
     time_minutes = st.sidebar.number_input("Tiempo (minutos):", min_value=1, value=num_questions * 2, key="time_minutes")
 
@@ -78,7 +68,7 @@ if st.session_state.page == 'config':
     st.header("Bienvenido al Simulador (Versión DEMO)")
     st.write("Configura tu examen en la barra lateral y haz clic en 'Iniciar Simulacro'.")
 
-# ... (El resto del código para las páginas 'quiz' y 'results' se mantiene igual)
+# (El resto del código para las páginas 'quiz' y 'results' se mantiene igual)
 elif st.session_state.page == 'quiz':
     remaining_time = st.session_state.end_time - time.time()
     if remaining_time <= 0:
