@@ -19,7 +19,7 @@ st.title("🚀 Simulador de Examen de Abogados (DEMO)")
 def load_public_data():
     try:
         # Autorización pública, no necesita credenciales
-        gc = gspread.service_account() # Se deja vacío para modo público
+        gc = gspread.client.Client(auth=None) # Se deja vacío para modo público
         sh = gc.open_by_url(SHEET_URL)
         ws = sh.worksheet(WORKSHEET_NAME)
         df = pd.DataFrame(ws.get_all_records())
