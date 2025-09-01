@@ -13,22 +13,20 @@ CREDENTIALS_FILE = "google_credentials.json"
 st.set_page_config(page_title="Simulador de Examen", layout="wide")
 st.title("🚀 Simulador de Examen de Abogados (VERSIÓN DEMO)")
 
-# --- FUNCIÓN DE CARGA DE DATOS ---
+# --- FUNCIÓN PARA CONECTAR Y CARGAR DATOS (versión para la NUBE) ---
 @st.cache_data(ttl=300)
 def load_data():
     try:
-        sa = gspread.service_account(filename=CREDENTIALS_FILE)
-        sh = sa.open_by_key(SPREADSHEET_ID)
+        # Autorización usando los SECRETOS de Streamlit, NO un archivo local
+        sa = gspread.service_account_from_dict(st.secrets["gcp_service_account"])
+        sh = sa.open_by_key(st.secrets["private_gsheets_url"])
         ws = sh.worksheet(WORKSHEET_NAME)
         df = pd.DataFrame(ws.get_all_records())
-        # Limpiar datos: Reemplazar celdas vacías en opciones con un string vacío
-        option_cols = ['Opción A', 'Opción B', 'Opción C', 'Opción D']
-        for col in option_cols:
-            if col in df.columns:
-                df[col] = df[col].fillna('')
+        df.fillna('', inplace=True)
         return df
     except Exception as e:
-        st.error(f"Ocurrió un error al conectar o leer Google Sheets: {e}")
+        st.error(f"Ocurrió un error al conectar con Google Sheets: {e}")
+        st.info("Asegúrate de que los 'Secrets' en Streamlit Cloud están bien configurados y que has compartido la hoja con el 'client_email'.")
         return None
 
 # --- CARGA DE DATOS ---
