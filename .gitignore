@@ -1,0 +1,8 @@
+# Ignorar la carpeta del entorno virtual
+venv/
+
+# Ignorar el archivo de credenciales de Google
+google_credentials.json
+
+# Ignorar la carpeta de configuración de VS Code (opcional pero recomendado)
+.vscode/
