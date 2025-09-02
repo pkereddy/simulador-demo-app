@@ -4,7 +4,6 @@ import random
 import time
 
 # --- CONFIGURACIÓN PRINCIPAL ---
-# Pega aquí el ID de tu hoja de cálculo DEMO (la que hiciste pública)
 SPREADSHEET_ID = "11NEFkg-uUe1zTWKse1yC0jEUZB5gd8QZP0gBS9Rj-Kw" 
 WORKSHEET_NAME = "BANCO DE PREGUNTAS"
 
@@ -12,7 +11,7 @@ WORKSHEET_NAME = "BANCO DE PREGUNTAS"
 st.set_page_config(page_title="Simulador DEMO", layout="wide")
 st.title("🚀 Simulador de Examen de Abogados (DEMO)")
 
-# --- FUNCIÓN DE CARGA DE DATOS (MÉTODO PÚBLICO A TRAVÉS DE CSV) ---
+# --- FUNCIÓN DE CARGA DE DATOS (MÉTODO PÚBLICO) ---
 @st.cache_data(ttl=300)
 def load_public_data():
     try:
@@ -27,11 +26,11 @@ def load_public_data():
         return None
 
 # --- CARGA INICIAL DE DATOS ---
-df = load_data()
+df = load_public_data()  # <--- ¡ESTA ES LA LÍNEA CORREGIDA!
 if df is None:
     st.stop()
 
-# (El resto del código es idéntico a nuestra versión funcional v2.5)
+# (El resto del código es idéntico y correcto)
 # --- INICIALIZACIÓN DE ESTADO ---
 if 'page' not in st.session_state:
     st.session_state.page = 'config'
@@ -68,7 +67,7 @@ if st.session_state.page == 'config':
     st.header("Bienvenido al Simulador (Versión DEMO)")
     st.write("Configura tu examen en la barra lateral y haz clic en 'Iniciar Simulacro'.")
 
-# (El resto del código para las páginas 'quiz' y 'results' se mantiene igual)
+# ... (El resto del código para las páginas 'quiz' y 'results' se mantiene igual)
 elif st.session_state.page == 'quiz':
     remaining_time = st.session_state.end_time - time.time()
     if remaining_time <= 0:
