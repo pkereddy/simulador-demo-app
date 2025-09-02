@@ -87,8 +87,8 @@ if st.session_state.page == 'config':
     col1, col2 = st.columns([1, 2])
     with col1:
         # IMAGEN NUEVA Y MEJORADA (Blanca, se ve bien en ambos modos)
-        st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1200px-Hamburger_icon.svg.png", 
-         caption="En móvil, haz clic aquí para abrir la configuración.", 
+        st.image("https://upload.wikimedia.org/wikipedia/commons/d/da/Flechas_Avanzar.png", 
+         caption="En móvil, haz clic parte superior izquierda para abrir la configuración.", 
          width=90) # Ajustamos el tamaño para que se vea bien
     with col2:
         st.markdown("""
