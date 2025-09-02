@@ -42,22 +42,7 @@ if 'page' not in st.session_state:
 def show_config_page(): st.session_state.page = 'config'
 def show_quiz_page(): st.session_state.page = 'quiz'
 def show_results_page(): st.session_state.page = 'results'
-if st.session_state.page == 'config':
-    st.sidebar.header("🛠️ Configurar Simulacro")
-    header_list = df.columns.tolist(); AREA_COL_NAME = header_list[1]; TIPO_COL_NAME = header_list[3]
-    areas = ["Todas"] + sorted(df[AREA_COL_NAME].astype(str).unique().tolist()); tipos = ["Todos"] + sorted(df[TIPO_COL_NAME].astype(str).unique().tolist())
-    area_filter = st.sidebar.selectbox("Filtrar por Área:", options=areas, key="area_filter"); tipo_filter = st.sidebar.selectbox("Filtrar por Tipo de Pregunta:", options=tipos, key="tipo_filter")
-    num_questions = st.sidebar.slider("Número de preguntas:", 1, len(df), 10, key="num_questions"); time_minutes = st.sidebar.number_input("Tiempo (minutos):", min_value=1, value=num_questions * 2, key="time_minutes")
-    if st.sidebar.button("🚀 Iniciar Simulacro"):
-        filtered_df = df.copy()
-        if st.session_state.area_filter != "Todas": filtered_df = filtered_df[filtered_df[AREA_COL_NAME] == st.session_state.area_filter]
-        if st.session_state.tipo_filter != "Todos": filtered_df = filtered_df[filtered_df[TIPO_COL_NAME] == st.session_state.tipo_filter]
-        if len(filtered_df) == 0: st.sidebar.warning("No se encontraron preguntas con los filtros seleccionados.")
-        else:
-            num_to_sample = min(st.session_state.num_questions, len(filtered_df)); st.session_state.questions = filtered_df.sample(n=num_to_sample).to_dict('records')
-            st.session_state.user_answers = [None] * num_to_sample; st.session_state.end_time = time.time() + st.session_state.time_minutes * 60
-            show_quiz_page(); st.rerun()
-    st.header("Bienvenido al Simulador (Versión DEMO)"); st.write("Configura tu examen en la barra lateral y haz clic en 'Iniciar Simulacro'.")
+Iniciar Simulacro
 elif st.session_state.page == 'quiz':
     remaining_time = st.session_state.end_time - time.time()
     if remaining_time <= 0: st.sidebar.error("⌛ ¡Tiempo Terminado!"); show_results_page(); st.rerun()
